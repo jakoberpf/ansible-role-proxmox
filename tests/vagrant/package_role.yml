@@ -1,10 +1,12 @@
 ---
-- hosts: localhost
+- name: Packege and install role
+  hosts: localhost
   connection: local
   vars:
     role_name: lae.proxmox
   tasks:
-    - block:
+    - name: Packge and install role
+      block:
       - shell: uname -a
       - shell: pwd
       - name: Package up current working role
