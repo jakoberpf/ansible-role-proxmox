@@ -1,0 +1,89 @@
+name: "Integration Testing"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  vagrant:
+    name: "vagrant test"
+    runs-on: macos-10.15
+
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v3
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+
+      - name: Run vagrant up
+        run: vagrant up
+    
+      - name: ssh into box after boot
+        run: vagrant ssh -c "echo 'hello world!'"
+
+      # - name: Install ansible and dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
+
+      # - name: Run ansible-lint
+      #   uses: ansible-community/ansible-lint-action@v6.0.2
+      #   with:
+      #     args: "ansible"
+
+    #   - name: Run ansible playbook
+    #     run: |
+    #       echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
+    #       ansible-playbook plays/main.yaml --vault-password-file .vault_pass
+
+      # - name: Run playbook
+      #   uses: dawidd6/action-ansible-playbook@v2
+      #   with:
+      #     playbook: plays/main.yml
+      #     directory: ansible
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     inventory: |
+      #       [all]
+      #       glacier   ansible_host=172.30.119.142  ansible_user=root
+      #       compute-1 ansible_host=172.30.119.190 ansible_user=root
+      #       compute-2 ansible_host=172.30.119.87  ansible_user=root
+      #       compute-3 ansible_host=172.30.119.79  ansible_user=root
+            
+      #       [compute]
+      #       compute-1
+      #       compute-2
+      #       compute-3
+            
+      #       [storage]
+      #       glacier
+      #     # Optional, encrypted vault password
+      #     vault_password: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+      #     # Optional, galaxy requirements filepath
+      #     # requirements: galaxy-requirements.yml
+      #     # Optional, additional flags to pass to ansible-playbook
+      #     # options: |
+      #     #   --inventory .hosts
+      #     #   --limit group1
+      #     #   --extra-vars hello=there
+      #     #   --verbose
+
+  # terraform:
+  #   name: "Terraform Testing, Validation, Scanning and Deployment"
+  #   runs-on: ubuntu-latest
+  #   if: ${{ always() }}
+  #   needs: ansible
+  #   defaults:
+  #     run:
+  #       shell: bash
+  #       working-directory: ./terraform
