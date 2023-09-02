@@ -12,9 +12,9 @@
       ansible.builtin.copy:
         content: "Acquire::Retries 0;\nAcquire::http::ProxyAutoDetect \"/etc/apt/detect-http-proxy\";"
         dest: /etc/apt/apt.conf.d/30detectproxy
-    - name: Install gnupg
-      apt:
-        name: gnupg
+    # - name: Install gnupg
+    #   apt:
+    #     name: gnupg
     - name: Replace /etc/network/interfaces
       ansible.builtin.copy:
         src: files/interfaces
