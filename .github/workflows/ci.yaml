@@ -44,7 +44,7 @@ jobs:
             ${{ runner.os }}-vagrant-
 
       - name: Run vagrant up
-        run: vagrant up # --provider=libvirt
+        run: vagrant up --provider=virtualbox
     
       - name: ssh into box after boot
         run: vagrant ssh -c "echo 'hello world!'"
