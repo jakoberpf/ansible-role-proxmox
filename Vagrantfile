@@ -18,6 +18,14 @@ Vagrant.configure("2") do |config|
     config.vm.define "pve-#{machine_id}" do |machine|
       machine.vm.hostname = "pve-#{machine_id}"
 
+      machine.vm.provider :virtualbox do |virtualbox|
+        virtualbox.customize ["createhd", :machine_id, "--filename `pwd`/pve-#{machine_id}/pve-#{machine_id}_vdb.vdi --size 128M --format VDI"
+        virtualbox.customize ["createhd", :machine_id, "--filename `pwd`/pve-#{machine_id}/pve-#{machine_id}_vdc.vdi --size 128M1 --format VDI"
+        virtualbox.customize ["storagectl", :machine_id, "--name 'SATA Controller' --add sata --controller IntelAHCI --portcount 3 --bootable on"]
+        virtualbox.customize ["storageattach", :machine_id, "--storagectl 'SATA Controller' --device 0 --port 2 --type hdd --medium `pwd`/pve-#{machine_id}/pve-#{machine_id}_vdb.vdi"]
+        virtualbox.customize ["storageattach", :machine_id, "--storagectl 'SATA Controller' --device 0 --port 3 --type hdd --medium `pwd`/pve-#{machine_id}/pve-#{machine_id}_vdc.vdi"]  
+      end
+
       if machine_id == N
         machine.vm.provision :ansible do |ansible|
           ansible.limit = "all,localhost"
