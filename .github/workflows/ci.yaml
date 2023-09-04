@@ -29,9 +29,6 @@ jobs:
           # brew install apt-cacher-ng
           brew install libvirt
           brew services start libvirt
-        # wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
-        # installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
-        # port install virt-manager
           brew install virt-manager
           virt-manager -c "qemu:///session" --no-fork
           vagrant plugin install vagrant-libvirt
@@ -39,6 +36,10 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
           if [ -f roles/requirements.yml ]; then ansible-galaxy install -r roles/requirements.yml --force; fi
+
+# wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+# installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
+# port install virt-manager
 
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
