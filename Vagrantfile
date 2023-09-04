@@ -8,14 +8,15 @@ Vagrant.configure("2") do |config|
     libvirt.storage :file, :size => '128M'
   end
 
+  config.vm.provider :virtualbox do |virtualbox|
+    virtualbox.memory = 4096
+    virtualbox.cpus = 2
+  end
+
   N = 3
   (1..N).each do |machine_id|
     config.vm.define "pve-#{machine_id}" do |machine|
       machine.vm.hostname = "pve-#{machine_id}"
-      # machine.vm.network "private_network", ip: "172.30.1.#{machine_id}"
-      # machine.vm.provider :libvirt do |libvirt|
-      #   libvirt.memory = 4096
-      # end
 
       if machine_id == N
         machine.vm.provision :ansible do |ansible|
