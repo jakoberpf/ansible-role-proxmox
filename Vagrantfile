@@ -21,9 +21,9 @@ Vagrant.configure("2") do |config|
       machine.vm.provider :virtualbox do |virtualbox|
         virtualbox.customize ['createmedium', 'disk', '--filename', "$PWD/pve-#{machine_id}_vdb.vdi", '--size', 128, '--format', 'VDI']
         virtualbox.customize ['createmedium', 'disk', '--filename', "$PWD/pve-#{machine_id}_vdc.vdi", '--size', 128, '--format', 'VDI']
-        virtualbox.customize ['storagectl', :machine_id, '--name', 'SATA Controller', '--add', 'sata', '--controller', 'IntelAHCI', '--portcount', '3', '--bootable', 'on']
-        virtualbox.customize ['storageattach', :machine_id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 2, '--type', 'hdd', '--medium', File.absolute_path("pve-#{machine_id}_vdb.vdi")]
-        virtualbox.customize ['storageattach', :machine_id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 3, '--type', 'hdd', '--medium', File.absolute_path("pve-#{machine_id}_vdc.vdi")]
+        virtualbox.customize ['storagectl', :id, '--name', 'SATA Controller', '--add', 'sata', '--controller', 'IntelAHCI', '--portcount', '3', '--bootable', 'on']
+        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 2, '--type', 'hdd', '--medium', File.absolute_path("pve-#{machine_id}_vdb.vdi")]
+        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 3, '--type', 'hdd', '--medium', File.absolute_path("pve-#{machine_id}_vdc.vdi")]
       end
 
       if machine_id == N
