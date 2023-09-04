@@ -19,11 +19,11 @@ Vagrant.configure("2") do |config|
       machine.vm.hostname = "pve-#{machine_id}"
 
       machine.vm.provider :virtualbox do |virtualbox|
-        virtualbox.customize ["createmedium", "disk", "--filename $pwd/pve-#{machine_id}/pve-#{machine_id}_vdb.vdi", "--size 128M", "--format VDI"]
-        virtualbox.customize ["createmedium", "disk", "--filename $pwd/pve-#{machine_id}/pve-#{machine_id}_vdc.vdi", "--size 128M", "--format VDI"]
+        virtualbox.customize ["createmedium", "disk", "--filename pve-#{machine_id}_vdb.vdi", "--size 128M", "--format VDI"]
+        virtualbox.customize ["createmedium", "disk", "--filename pve-#{machine_id}_vdc.vdi", "--size 128M", "--format VDI"]
         virtualbox.customize ["storagectl", "pve-#{machine_id}", "--name 'SATA Controller'", "--add sata", "--controller IntelAHCI", "--portcount 3", "--bootable on"]
-        virtualbox.customize ["storageattach", "pve-#{machine_id}", "--storagectl 'SATA Controller'", "--device 0", "--port 2", "--type hdd", "--medium $pwd/pve-#{machine_id}/pve-#{machine_id}_vdb.vdi"]
-        virtualbox.customize ["storageattach", "pve-#{machine_id}", "--storagectl 'SATA Controller'", "--device 0", "--port 3", "--type hdd", "--medium $pwd/pve-#{machine_id}/pve-#{machine_id}_vdc.vdi"]  
+        virtualbox.customize ["storageattach", "pve-#{machine_id}", "--storagectl 'SATA Controller'", "--device 0", "--port 2", "--type hdd", "--medium pve-#{machine_id}_vdb.vdi"]
+        virtualbox.customize ["storageattach", "pve-#{machine_id}", "--storagectl 'SATA Controller'", "--device 0", "--port 3", "--type hdd", "--medium pve-#{machine_id}_vdc.vdi"]  
       end
 
       if machine_id == N
