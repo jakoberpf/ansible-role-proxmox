@@ -28,9 +28,7 @@ jobs:
         run: |
           # brew install apt-cacher-ng
           brew install libvirt
-          port install virt-manager
           brew services start libvirt
-          virt-manager -c "qemu:///session" --no-fork
           vagrant plugin install vagrant-libvirt
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
