@@ -29,6 +29,11 @@ jobs:
           # brew install apt-cacher-ng
           brew install libvirt
           brew services start libvirt
+        # wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+        # installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
+        # port install virt-manager
+          brew install virt-manager
+          virt-manager -c "qemu:///session" --no-fork
           vagrant plugin install vagrant-libvirt
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
@@ -44,7 +49,7 @@ jobs:
             ${{ runner.os }}-vagrant-
 
       - name: Run vagrant up
-        run: vagrant up --provider=virtualbox
+        run: vagrant up --provider=libvirt
     
       - name: ssh into box after boot
         run: vagrant ssh -c "echo 'hello world!'"
