@@ -5,5 +5,9 @@ iface lo inet loopback
 
 # The primary network interface
 allow-hotplug eth0
-iface eth0 inet static
-        address {{ vagrant_static_private_address }}
+iface eth0 inet dhcp
+
+# The secondary network interface
+# auto eth1
+# iface eth1 inet static
+#     address {{ vagrant_static_private_address }}
