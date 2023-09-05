@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
         virtualbox.customize ['createmedium', 'disk', '--filename', "$PWD/pve-#{machine_id}_vdc.vdi", '--size', 128, '--format', 'VDI']
         virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 2, '--type', 'hdd', '--medium', "$PWD/pve-#{machine_id}_vdb.vdi"]
         virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 3, '--type', 'hdd', '--medium', "$PWD/pve-#{machine_id}_vdc.vdi"]
-        machine.vm.network "private_network", ip: "192.168.50.#{machine_id}", virtualbox__intnet: "pve"
+        machine.vm.network "private_network", ip: "192.168.50.1#{machine_id}", virtualbox__intnet: "pve"
       end
 
       if machine_id == N
