@@ -10,10 +10,50 @@ on:
       - main
 
 jobs:
-  vagrant:
-    name: "vagrant test"
+  vagrant-libvirt:
+    name: "Vagrant - LibVirt"
     runs-on: macos-12
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v3
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: 'pip'
+
+      - name: Install apt-caching-proxy, ansible and dependencies
+        run: |
+          # brew install apt-cacher-ng
+          brew install libvirt
+          brew services start libvirt
+          brew install virt-manager
+          virt-manager -c "qemu:///session" --no-fork
+          vagrant plugin install vagrant-libvirt
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
+          if [ -f roles/requirements.yml ]; then ansible-galaxy install -r roles/requirements.yml --force; fi
+
+# wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+# installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
+# port install virt-manager
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+
+      - name: Run vagrant up
+        run: vagrant up --provider=libvirt
+
+  vagrant-virtualbox:
+    name: "vagrant - VirtualBox"
+    runs-on: macos-12
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v3
@@ -32,16 +72,6 @@ jobs:
           if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
           if [ -f roles/requirements.yml ]; then ansible-galaxy install -r roles/requirements.yml --force; fi
 
-# brew install libvirt
-# brew services start libvirt
-# brew install virt-manager
-# virt-manager -c "qemu:///session" --no-fork
-# vagrant plugin install vagrant-libvirt
-
-# wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
-# installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
-# port install virt-manager
-
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
         with:
@@ -51,16 +81,7 @@ jobs:
             ${{ runner.os }}-vagrant-
 
       - name: Run vagrant up
-        run: vagrant up # --provider=libvirt
-    
-      - name: ssh into box after boot
-        run: vagrant ssh -c "echo 'hello world!'"
-
-      # - name: Install ansible and dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
+        run: vagrant up --provider=virtualbox
 
       # - name: Run ansible-lint
       #   uses: ansible-community/ansible-lint-action@v6.0.2
