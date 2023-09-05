@@ -12,7 +12,7 @@ on:
 jobs:
   vagrant-libvirt:
     name: "Vagrant - LibVirt"
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v3
@@ -25,10 +25,11 @@ jobs:
 
       - name: Install apt-caching-proxy, ansible and dependencies
         run: |
-          # brew install apt-cacher-ng
-          brew install libvirt
-          brew services start libvirt
-          brew install virt-manager
+          apt update && apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system libvirt-bin libvirt-doc -y
+          systemctl enable --now libvirtd
+          systemctl start libvirtd
+          systemctl status libvirtd
+          vagrant plugin install vagrant-libvirt
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
