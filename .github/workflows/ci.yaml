@@ -25,10 +25,10 @@ jobs:
 
       - name: Install apt-caching-proxy, ansible and dependencies
         run: |
-          apt update && apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system libvirt-bin libvirt-doc -y
-          systemctl enable --now libvirtd
-          systemctl start libvirtd
-          systemctl status libvirtd
+          sudo apt update && sudo apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system libvirt-bin libvirt-doc -y
+          sudo systemctl enable --now libvirtd
+          sudo systemctl start libvirtd
+          sudo systemctl status libvirtd
           vagrant plugin install vagrant-libvirt
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
