@@ -5,4 +5,5 @@ iface lo inet loopback
 
 # The primary network interface
 allow-hotplug eth0
-iface eth0 inet dhcp
+iface eth0 inet static
+        address {{ vagrant_static_private_address }}

@@ -36,6 +36,11 @@ Vagrant.configure("2") do |config|
           ansible.limit = "all"
           ansible.playbook = "tests/vagrant/provision.yml"
           ansible.verbose = true
+          ansible.host_vars = {
+            "pve-1" => {"vagrant_static_private_address" => "192.168.50.11/24" },
+            "pve-2" => {"vagrant_static_private_address" => "192.168.50.12/24" },
+            "pve-3" => {"vagrant_static_private_address" => "192.168.50.13/24" }
+          }
         end
       end
     end

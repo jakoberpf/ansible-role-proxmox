@@ -17,7 +17,7 @@
         update_cache: true
         name: gnupg2
     - name: Replace /etc/network/interfaces
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: files/interfaces
         dest: /etc/network/interfaces
   roles:
