@@ -24,6 +24,8 @@
       shell: sudo ip route add -host 8.8.8.8 dev eth0
     - name: Reload interface configuration
       shell: /etc/init.d/networking reload
+    - name: Reload interface configuration
+      shell: ip -4 route get 8.8. 8.8
     - name: Run facts module to get latest information
       setup:
     - debug:
