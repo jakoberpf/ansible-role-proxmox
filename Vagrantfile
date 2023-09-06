@@ -19,10 +19,10 @@ Vagrant.configure("2") do |config|
       machine.vm.hostname = "pve-#{machine_id}"
 
       machine.vm.provider :virtualbox do |virtualbox|
-        virtualbox.customize ['createmedium', 'disk', '--filename', "$PWD/pve-#{machine_id}_vdb.vdi", '--size', 128, '--format', 'VDI']
-        virtualbox.customize ['createmedium', 'disk', '--filename', "$PWD/pve-#{machine_id}_vdc.vdi", '--size', 128, '--format', 'VDI']
-        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 2, '--type', 'hdd', '--medium', "$PWD/pve-#{machine_id}_vdb.vdi"]
-        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 3, '--type', 'hdd', '--medium', "$PWD/pve-#{machine_id}_vdc.vdi"]
+        virtualbox.customize ['createmedium', 'disk', '--filename', "disks/pve-#{machine_id}_vdb.vdi", '--size', 128, '--format', 'VDI']
+        virtualbox.customize ['createmedium', 'disk', '--filename', "disks/pve-#{machine_id}_vdc.vdi", '--size', 128, '--format', 'VDI']
+        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 2, '--type', 'hdd', '--medium', "disks/pve-#{machine_id}_vdb.vdi"]
+        virtualbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--device', 0, '--port', 3, '--type', 'hdd', '--medium', "disks/pve-#{machine_id}_vdc.vdi"]
         machine.vm.network "private_network", ip: "192.168.50.1#{machine_id}", virtualbox__intnet: true
       end
 
