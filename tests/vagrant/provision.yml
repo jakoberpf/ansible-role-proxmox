@@ -20,6 +20,12 @@
       ansible.builtin.template:
         src: files/interfaces
         dest: /etc/network/interfaces
+    - name: Add special route for ansible to determine its default address from 
+      shell: sudo route add -net 8.8.8.8 netmask 255.255.255.255 eth1
+    - name: Reload interface configuration
+      shell: /etc/init.d/networking reload
+    - name: Run facts module to get latest information
+      setup:
   roles:
     - geerlingguy.ntp
     - lae.proxmox
