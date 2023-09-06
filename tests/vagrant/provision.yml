@@ -21,7 +21,7 @@
         src: files/interfaces
         dest: /etc/network/interfaces
     - name: Add special route for ansible to determine its default address from 
-      shell: sudo ip route add -host 8.8.8.8 dev eth1
+      shell: sudo ip route add 8.8.8.8 dev eth1
     - name: Reload interface configuration
       shell: sudo /etc/init.d/networking reload
     - name: Reload interface configuration
