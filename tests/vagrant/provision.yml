@@ -21,11 +21,13 @@
         src: files/interfaces
         dest: /etc/network/interfaces
     - name: Add special route for ansible to determine its default address from 
-      shell: sudo ip route add 8.8.8.8/32 via 10.0.2.1
+      shell: sudo ip route add -host 8.8.8.8 dev eth0
     - name: Reload interface configuration
       shell: /etc/init.d/networking reload
     - name: Run facts module to get latest information
       setup:
+    - debug:
+        var: ansible_default_ipv4.address
   roles:
     - geerlingguy.ntp
     - lae.proxmox
