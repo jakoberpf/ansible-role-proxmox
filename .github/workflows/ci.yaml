@@ -10,44 +10,53 @@ on:
       - main
 
 jobs:
-  vagrant-libvirt:
-    name: "Vagrant - LibVirt"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository to the runner
-        uses: actions/checkout@v3
+  # vagrant-libvirt:
+  #   name: "Vagrant - LibVirt"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout the repository to the runner
+  #       uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-          cache: 'pip'
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: 3.9
+  #         cache: 'pip'
 
-      - name: Install apt-caching-proxy, ansible and dependencies
-        run: |
-          sudo apt update && sudo apt install qemu-kvm virt-manager virtinst libvirt-dev libvirt-clients libvirt-daemon-system bridge-utils -y
-          sudo systemctl enable --now libvirtd
-          sudo systemctl start libvirtd
-          sudo systemctl status libvirtd
-          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-          sudo apt update && sudo apt install vagrant -y
-          vagrant plugin install vagrant-libvirt
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-          if [ -f roles/requirements.yml ]; then ansible-galaxy install -r roles/requirements.yml --force; fi
+  #     - name: Enable KVM group perms
+  #       run: |
+  #         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+  #         sudo udevadm control --reload-rules
+  #         sudo udevadm trigger --name-match=kvm
+  #         sudo apt-get update
+  #         sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
+  #         sudo usermod -a -G kvm,libvirt $USER
 
-      - name: Cache Vagrant boxes
-        uses: actions/cache@v2
-        with:
-          path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
-          restore-keys: |
-            ${{ runner.os }}-vagrant-
+  #     - name: Install apt-caching-proxy, ansible and dependencies
+  #       run: |
+  #         sudo apt update && sudo apt install qemu-kvm virt-manager virtinst libvirt-dev libvirt-clients libvirt-daemon-system bridge-utils -y
+  #         sudo systemctl enable --now libvirtd
+  #         sudo systemctl start libvirtd
+  #         sudo systemctl status libvirtd
+  #         wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  #         echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+  #         sudo apt update && sudo apt install vagrant -y
+  #         vagrant plugin install vagrant-libvirt
+  #         python -m pip install --upgrade pip
+  #         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+  #         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
+  #         if [ -f roles/requirements.yml ]; then ansible-galaxy install -r roles/requirements.yml --force; fi
 
-      - name: Run vagrant up
-        run: vagrant up --provider=libvirt
+  #     - name: Cache Vagrant boxes
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ~/.vagrant.d/boxes
+  #         key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-vagrant-
+
+  #     - name: Run vagrant up
+  #       run: vagrant up --provider=libvirt
 
   vagrant-virtualbox:
     name: "vagrant - VirtualBox"
