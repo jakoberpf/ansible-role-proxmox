@@ -8,6 +8,6 @@ allow-hotplug eth0
 iface eth0 inet dhcp
 
 # The secondary network interface
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address {{ vagrant_static_private_address }}
