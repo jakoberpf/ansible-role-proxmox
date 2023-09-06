@@ -20,10 +20,10 @@
       ansible.builtin.template:
         src: files/interfaces
         dest: /etc/network/interfaces
-    - name: Add special route for ansible to determine its default address from 
-      shell: sudo ip route add 8.8.8.8 dev eth1
     - name: Reload interface configuration
       shell: sudo /etc/init.d/networking reload
+    - name: Add special route for ansible to determine its default address from 
+      shell: sudo ip route add 8.8.8.8 dev eth1
     - name: Reload interface configuration
       shell: ip -4 route get 8.8.8.8
     - name: Run facts module to get latest information
