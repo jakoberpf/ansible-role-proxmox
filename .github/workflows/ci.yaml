@@ -1,4 +1,4 @@
-name: "Integration Testing"
+name: "Continuos Integration"
 
 on:
   push:
@@ -8,8 +8,21 @@ on:
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
+  linting:
+    name: "Linting"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v3
+
+      - name: Run ansible-lint
+        uses: ansible-community/ansible-lint-action@v6.0.2
+        with:
+          args: "ansible"
+
   # vagrant-libvirt:
   #   name: "Vagrant - LibVirt"
   #   runs-on: ubuntu-latest
@@ -59,8 +72,10 @@ jobs:
   #       run: vagrant up --provider=libvirt
 
   vagrant-virtualbox:
-    name: "vagrant - VirtualBox"
+    name: "Vagrant - VirtualBox"
     runs-on: macos-12
+    needs: 
+      - linting
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v3
@@ -89,54 +104,13 @@ jobs:
 
       - name: Run vagrant up
         run: vagrant up --provider=virtualbox
-
-      # - name: Run ansible-lint
-      #   uses: ansible-community/ansible-lint-action@v6.0.2
-      #   with:
-      #     args: "ansible"
-
-    #   - name: Run ansible playbook
-    #     run: |
-    #       echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
-    #       ansible-playbook plays/main.yaml --vault-password-file .vault_pass
-
-      # - name: Run playbook
-      #   uses: dawidd6/action-ansible-playbook@v2
-      #   with:
-      #     playbook: plays/main.yml
-      #     directory: ansible
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     inventory: |
-      #       [all]
-      #       glacier   ansible_host=172.30.119.142  ansible_user=root
-      #       compute-1 ansible_host=172.30.119.190 ansible_user=root
-      #       compute-2 ansible_host=172.30.119.87  ansible_user=root
-      #       compute-3 ansible_host=172.30.119.79  ansible_user=root
-            
-      #       [compute]
-      #       compute-1
-      #       compute-2
-      #       compute-3
-            
-      #       [storage]
-      #       glacier
-      #     # Optional, encrypted vault password
-      #     vault_password: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-      #     # Optional, galaxy requirements filepath
-      #     # requirements: galaxy-requirements.yml
-      #     # Optional, additional flags to pass to ansible-playbook
-      #     # options: |
-      #     #   --inventory .hosts
-      #     #   --limit group1
-      #     #   --extra-vars hello=there
-      #     #   --verbose
-
-  # terraform:
-  #   name: "Terraform Testing, Validation, Scanning and Deployment"
-  #   runs-on: ubuntu-latest
-  #   if: ${{ always() }}
-  #   needs: ansible
-  #   defaults:
-  #     run:
-  #       shell: bash
-  #       working-directory: ./terraform
+  
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+    needs: 
+      - vagrant-virtualbox
+    steps:
+      - name: "Determine tag"
+        run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
+    
