@@ -1,5 +1,9 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/bullseye64" # https://stackoverflow.com/questions/16708917/how-do-i-include-variables-in-my-vagrantfile
+  config.vm.box = "debian/bullseye64" 
+  
+  # https://stackoverflow.com/questions/16708917/how-do-i-include-variables-in-my-vagrantfile
+  # https://stackoverflow.com/questions/14124234/how-to-pass-parameter-on-vagrant-up-and-have-it-in-the-scope-of-vagrantfile
+  # https://stackoverflow.com/questions/16708917/how-do-i-include-variables-in-my-vagrantfile
 
   config.vm.provider :libvirt do |libvirt|
     libvirt.memory = 8192
