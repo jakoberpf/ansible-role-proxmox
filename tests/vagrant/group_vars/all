@@ -69,7 +69,7 @@ pve_storages:
 pve_zfs_create_volumes:
   - testpool/zfs2
 pve_ceph_osds:
-  - device: "/dev/vdb"
+  - device: "/dev/sdb"
 pve_hooks:
   zfs_post_install: zpool_setup.yml
 ntp_manage_config: true
